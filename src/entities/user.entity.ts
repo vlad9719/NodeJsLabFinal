@@ -1,7 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Photo } from './photo.entity';
+import { Column, Entity, IsNull, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from './post.entity';
 import { Comment } from './comment.entity';
+import { NullableTypeAnnotation } from '@babel/types';
 
 @Entity()
 export class User {
@@ -9,17 +9,22 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'nvarchar',
+  charset: 'cp1251',
+  nullable: true,
+  })
   login: string;
 
-  @Column()
+  @Column({
+    unique: true,
+    nullable: true,
+  })
   email: string;
 
-  @Column( { type: 'varchar', width: 64} )
-  password;
-
-  @Column()
-  avatarUrl: string;
+  @Column({
+    nullable: true,
+  })
+  password: string;
 
   @ManyToMany(type => User)
   @JoinTable()
@@ -34,5 +39,15 @@ export class User {
 
   @OneToMany(type => Comment, comment => comment.user)
   comments: Comment[];
+
+  @Column({
+    nullable: true,
+  })
+  thirdPartyId: string;
+
+  @Column({
+    nullable: true,
+  })
+  thirdPartyProvider: string;
 
 }

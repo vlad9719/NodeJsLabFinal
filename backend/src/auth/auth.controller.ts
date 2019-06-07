@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards, Res, Req, UnauthorizedException, Post, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthorizeUserDto } from '../users/dto/authorize.user.dto';
+import { AuthorizeUserDto } from '../users/validation/dto/authorize.user.dto';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 

@@ -49,4 +49,13 @@ export class CommentsService {
       });
   }
 
+  async findCommentsByPostId(postId: number): Promise<Comment[]> {
+    const post = await this.postsService.findPostById(postId);
+    return this.commentsRepository.find({
+      where: {
+        post,
+      },
+      relations: ['user', 'mentioned'],
+    });
+  }
 }

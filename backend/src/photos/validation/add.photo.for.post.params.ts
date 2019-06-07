@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumberString } from 'class-validator';
 
-export class PhotosParams {
+export class AddPhotoForPostParams {
   @IsNumberString()
   @IsNotEmpty()
   postId: number;

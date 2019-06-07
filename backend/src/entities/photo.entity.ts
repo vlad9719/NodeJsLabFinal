@@ -16,7 +16,7 @@ export class Photo {
   @JoinColumn()
   post: Post;
 
-  @ManyToOne(type => Comment, comment => comment.photos)
+  @OneToOne(type => Comment)
+  @JoinColumn()
   comment: Comment;
-
 }

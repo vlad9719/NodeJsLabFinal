@@ -12,9 +12,6 @@ export class Comment {
   @Column()
   text: string;
 
-  @OneToMany(type => Photo, photo => photo.comment)
-  photos: Photo[];
-
   @ManyToOne(type => Post, post => post.comments)
   post: Post;
 
@@ -24,7 +21,9 @@ export class Comment {
   @Column()
   createdAt: Date;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   updatedAt: Date;
 
   @ManyToMany(type => User)

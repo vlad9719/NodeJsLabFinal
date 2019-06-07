@@ -1,14 +1,10 @@
 import { IsArray, IsNotEmpty, IsOptional } from 'class-validator';
 
-export class CreatePostDto {
+export class CreateCommentDto {
   @IsNotEmpty()
   text: string;
 
   @IsOptional()
   @IsArray()
   mentionedIds: number[];
-
-  @IsOptional()
-  @IsArray()
-  hashtags: string[];
 }

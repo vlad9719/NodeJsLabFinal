@@ -23,14 +23,18 @@ export class PostsService {
 
     const user: User = await this.usersService.findUserById(userId);
 
-    const mentioned: User[] = await this.usersService.findUsersByIds(mentionedIds);
+    let mentioned: User[] = [];
+    if (mentionedIds) {
+      mentioned = await this.usersService.findUsersByIds(mentionedIds);
+    }
 
     const hashtags: Hashtag[] = [];
-
-    await hashtagsArray.forEach(async (hashtag) => {
-      const newHashtag = await this.hashtagService.findOrCreateHashtag(hashtag);
-      await hashtags.push(newHashtag);
-    });
+    if (hashtagsArray) {
+      await hashtagsArray.forEach(async (hashtag) => {
+        const newHashtag = await this.hashtagService.findOrCreateHashtag(hashtag);
+        await hashtags.push(newHashtag);
+      });
+    }
 
     return await this.postsRepository.save({
       text,
@@ -41,7 +45,7 @@ export class PostsService {
     });
   }
 
-  async findPostByid(postId: number): Promise<Post> {
+  async findPostById(postId: number): Promise<Post> {
     return this.postsRepository.findOneOrFail(postId)
       .catch(reason => {
         if (reason instanceof EntityNotFoundError) {

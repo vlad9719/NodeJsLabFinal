@@ -9,10 +9,13 @@ import { UsersService } from './users/users.service';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { PostsModule } from './posts/posts.module';
+import { PhotosModule } from './photos/photos.module';
+import { HashtagsModule } from './hashtags/hashtags.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule],
-  controllers: [AppController, HealthcheckController, AuthController],
+  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule, PostsModule, PhotosModule, HashtagsModule],
+  controllers: [AppController, HealthcheckController, AuthController, UsersController],
   providers: [AppService, AuthService, UsersService],
 })
 export class AppModule {}

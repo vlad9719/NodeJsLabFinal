@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, IsNull, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Photo } from './photo.entity';
 import { User } from './user.entity';
 import { Comment } from './comment.entity';
@@ -15,11 +15,10 @@ export class Post {
   @Column()
   createdAt: Date;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   updatedAt: Date;
-
-  @OneToMany(type => Photo, photo => photo.post)
-  photos: Photo[];
 
   @OneToMany(type => Comment, comment => comment.post)
   comments: Comment[];

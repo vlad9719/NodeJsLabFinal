@@ -11,10 +11,6 @@ export class Hashtag {
   @Column()
   text: string;
 
-  @ManyToMany(type => Post)
-  @JoinTable()
-  posts: Post[];
-
   @ManyToMany(type => Comment)
   @JoinTable()
   comments: Comment[];

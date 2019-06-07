@@ -2,6 +2,7 @@ import { Column, Entity, IsNull, JoinTable, ManyToMany, ManyToOne, OneToMany, On
 import { Photo } from './photo.entity';
 import { User } from './user.entity';
 import { Comment } from './comment.entity';
+import { Hashtag } from './hashtag.entity';
 
 @Entity()
 export class Post {
@@ -30,4 +31,7 @@ export class Post {
   @JoinTable()
   mentioned: User[];
 
+  @ManyToMany(type => Hashtag)
+  @JoinTable()
+  hashtags: Hashtag[];
 }

@@ -2,12 +2,12 @@ import { BadRequestException, Injectable, UploadedFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
 import { Repository } from 'typeorm';
-import * as multer from 'multer';
 import { UsersService } from '../users/users.service';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { HashtagsService } from '../hashtags/hashtags.service';
 import { User } from '../entities/user.entity';
 import { Hashtag } from '../entities/hashtag.entity';
+import has = Reflect.has;
 
 @Injectable()
 export class PostsService {
@@ -17,9 +17,10 @@ export class PostsService {
     private readonly postsRepository: Repository<Post>,
     private readonly usersService: UsersService,
     private readonly hashtagService: HashtagsService,
-  ) {}
+  ) {
+  }
 
-  async addPost(userId: number, text: string, mentionedIds: number[], hashtagsArray: string[]): Promise<Post> {
+  async addPost(userId: number, text: string, mentionedIds: number[], hashtagsStrings: string[] = []): Promise<Post> {
 
     const user: User = await this.usersService.findUserById(userId);
 
@@ -28,15 +29,9 @@ export class PostsService {
       mentioned = await this.usersService.findUsersByIds(mentionedIds);
     }
 
-    const hashtags: Hashtag[] = [];
-    if (hashtagsArray) {
-      await hashtagsArray.forEach(async (hashtag) => {
-        const newHashtag = await this.hashtagService.findOrCreateHashtag(hashtag);
-        await hashtags.push(newHashtag);
-      });
-    }
+    const hashtags = await this.hashtagService.createHashtagsArray(hashtagsStrings);
 
-    return await this.postsRepository.save({
+    return this.postsRepository.save({
       text,
       createdAt: new Date(),
       user,
@@ -54,5 +49,16 @@ export class PostsService {
 
         throw new Error(reason);
       });
+  }
+
+  async findPostsByUserId(userId: number): Promise<Post[]> {
+    const user: User = await this.usersService.findUserById(userId);
+
+    return await this.postsRepository.find({
+      where: {
+        user,
+      },
+      relations: ['mentioned', 'hashtags'],
+    });
   }
 }

@@ -1,23 +1,15 @@
-import { BadRequestException, Body, Controller, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { PhotosService } from './photos.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
-import { AddPhotoForPostParams } from './validation/add.photo.for.post.params';
+import { PhotoForPostParams } from './validation/photo.for.post.params';
 import { AuthGuard } from '@nestjs/passport';
-import { AddPhotoForCommentParams } from './validation/add.photo.for.comment.params';
+import { PhotoForCommentParams } from './validation/photo.for.comment.params';
+import { Photo } from '../entities/photo.entity';
 
 @Controller('/api/photos')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class PhotosController {
-
-  private readonly storageOptions = multer.diskStorage({
-    destination(req, file, cb) {
-      cb(null, `storage`);
-    },
-    filename(req, file, cb) {
-      cb(null, `${Date.now()}_${file.originalname}`);
-    },
-  });
 
   constructor(
     private readonly photosService: PhotosService,
@@ -36,7 +28,7 @@ export class PhotosController {
       }),
     },
   ))
-  async addPhotoForPost(@Param() params: AddPhotoForPostParams, @UploadedFile() file) {
+  async addPhotoForPost(@Param() params: PhotoForPostParams, @UploadedFile() file) {
     if (!file) {
       throw new BadRequestException('Please provide a file in the request');
     }
@@ -54,11 +46,23 @@ export class PhotosController {
       },
     }),
   }))
-  async addPhotoForComment(@Param() params: AddPhotoForCommentParams, @UploadedFile() file) {
+  async addPhotoForComment(@Param() params: PhotoForCommentParams, @UploadedFile() file) {
     if (!file) {
       throw new BadRequestException('Please provide a file in the request');
     }
 
     return await this.photosService.addPhotoForComment(file.filename, params.commentId);
+  }
+
+  @Get('download/post/:postId')
+  async getPhotoForPost(@Param() params: PhotoForPostParams, @Res() response) {
+    const photo: Photo = await this.photosService.findPhotoByPostId(params.postId);
+    response.sendFile(photo.url, { root: 'storage' });
+  }
+
+  @Get('download/comment/:commentId')
+  async getPhotoForComment(@Param() params: PhotoForCommentParams, @Res() response) {
+    const photo: Photo = await this.photosService.findPhotoByCommentId(params.commentId);
+    response.sendFile(photo.url, { root: 'storage' });
   }
 }

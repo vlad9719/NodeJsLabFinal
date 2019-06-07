@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumberString } from 'class-validator';
 
-export class AddPhotoForCommentParams {
+export class PhotoForCommentParams {
 
   @IsNotEmpty()
   @IsNumberString()

@@ -6,8 +6,8 @@ import { UsersService } from '../users/users.service';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { HashtagsService } from '../hashtags/hashtags.service';
 import { User } from '../entities/user.entity';
-import { Hashtag } from '../entities/hashtag.entity';
-import has = Reflect.has;
+import { CommentsService } from '../comments/comments.service';
+import { Comment } from '../entities/comment.entity';
 
 @Injectable()
 export class PostsService {
@@ -15,6 +15,8 @@ export class PostsService {
   constructor(
     @InjectRepository(Post)
     private readonly postsRepository: Repository<Post>,
+    @InjectRepository(Comment)
+    private readonly commentsRepository: Repository<Comment>,
     private readonly usersService: UsersService,
     private readonly hashtagService: HashtagsService,
   ) {
@@ -54,11 +56,43 @@ export class PostsService {
   async findPostsByUserId(userId: number): Promise<Post[]> {
     const user: User = await this.usersService.findUserById(userId);
 
-    return await this.postsRepository.find({
+    const posts: Post[] = await this.postsRepository.find({
       where: {
         user,
       },
-      relations: ['mentioned', 'hashtags'],
+      relations: ['mentioned', 'hashtags', 'user'],
     });
+
+    for (const post of posts) {
+      post.comments = await this.commentsRepository.find({
+        where: {
+          post,
+        },
+        relations: ['user', 'mentioned'],
+      });
+    }
+
+    return posts;
+  }
+
+  async getUserFeed(userId: number): Promise<object> {
+    const userPosts: Post[] = await this.findPostsByUserId(userId);
+    const following: User[] = await this.usersService.getFollowingByUserId(userId);
+
+    const followingPosts: Post[] = [];
+
+    for (const followingUser of following) {
+      const posts = await this.findPostsByUserId(followingUser.id);
+      followingPosts.push(...posts);
+    }
+
+    const feedPosts = [...userPosts, ...followingPosts];
+    feedPosts.sort((postA, postB) => {
+      return postB.createdAt.valueOf() - postA.createdAt.valueOf();
+    });
+
+    return {
+      feedPosts,
+    };
   }
 }

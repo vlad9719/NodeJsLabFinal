@@ -137,7 +137,7 @@ export class UsersService {
     };
   }
 
-  async getFollowersByUserId(userId: number): Promise<object[]> {
+  async getFollowersByUserId(userId: number): Promise<User []> {
     return this.usersRepository.findOne({
       where: {
         id: userId,
@@ -152,7 +152,7 @@ export class UsersService {
       });
   }
 
-  async getFollowingByUserId(userId: number): Promise<object[]> {
+  async getFollowingByUserId(userId: number): Promise<User []> {
     return this.usersRepository.findOne({
       where: {
         id: userId,

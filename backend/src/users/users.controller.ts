@@ -37,6 +37,7 @@ export class UsersController {
       .then(followers => {
         return {
           followers,
+          count: followers.length,
         };
       });
   }
@@ -47,6 +48,7 @@ export class UsersController {
       .then(following => {
         return {
           following,
+          count: following.length,
         };
       });
   }

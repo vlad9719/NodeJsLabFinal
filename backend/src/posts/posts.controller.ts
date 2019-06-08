@@ -5,6 +5,7 @@ import { CreatePostParams } from './validation/params/create.post.params';
 import { PostsService } from './posts.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GetPostsByUserParams } from './validation/params/get.posts.by.user.params';
+import { GetFeedForUserParams } from './validation/params/get.feed.for.user.params';
 
 @Controller('/api/posts')
 export class PostsController {
@@ -26,5 +27,11 @@ export class PostsController {
       .then(posts => {
         return { posts };
       });
+  }
+
+  @Get('/feed/:userId')
+  @UseGuards(AuthGuard('jwt'))
+  async getFeedForUser(@Param() params: GetFeedForUserParams) {
+    return await this.postsService.getUserFeed(params.userId);
   }
 }

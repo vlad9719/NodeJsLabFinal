@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from './user.entity';
 
@@ -9,6 +9,9 @@ export class Comment {
   id: number;
 
   @Column()
+  @Index({
+    fulltext: true,
+  })
   text: string;
 
   @ManyToOne(type => Post, post => post.comments)

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from './post.entity';
 import { Comment } from './comment.entity';
 
@@ -9,6 +9,9 @@ export class Hashtag {
   id: number;
 
   @Column()
+  @Index({
+    fulltext: true,
+  })
   text: string;
 
   @ManyToMany(type => Comment)

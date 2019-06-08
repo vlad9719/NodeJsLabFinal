@@ -13,9 +13,10 @@ import { PostsModule } from './posts/posts.module';
 import { PhotosModule } from './photos/photos.module';
 import { HashtagsModule } from './hashtags/hashtags.module';
 import { CommentsModule } from './comments/comments.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule, PostsModule, PhotosModule, HashtagsModule, CommentsModule],
+  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule, PostsModule, PhotosModule, HashtagsModule, CommentsModule, SearchModule],
   controllers: [AppController, HealthcheckController, AuthController, UsersController],
   providers: [AppService, AuthService, UsersService],
 })

@@ -1,4 +1,4 @@
-import { Column, Entity, IsNull, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, IsNull, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Photo } from './photo.entity';
 import { User } from './user.entity';
 import { Comment } from './comment.entity';
@@ -11,6 +11,9 @@ export class Post {
   id: number;
 
   @Column()
+  @Index({
+    fulltext: true,
+  })
   text: string;
 
   @Column()

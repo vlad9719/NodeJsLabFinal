@@ -74,6 +74,12 @@ export class PostsService {
         relations: ['user', 'mentioned'],
       });
 
+      for (const comment of post.comments) {
+        comment.photo = await this.photosRepository.findOne({
+          comment,
+        });
+      }
+
       post.photo = await this.photosRepository.findOne({
         where: {
           post,

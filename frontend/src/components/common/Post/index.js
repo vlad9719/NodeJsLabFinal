@@ -8,7 +8,11 @@ import PropTypes from 'prop-types';
 
 class Post extends React.Component {
   render(props) {
-    return <Card post={this.props.post}/>;
+    return (
+      <div>
+        <Card post={this.props.post}/>
+      </div>
+    );
   }
 }
 
@@ -19,14 +23,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   me,
-  getUserFeed
+  getUserFeed,
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withRouter(Post));
 
 Post.propTypes = {
-  getUserFeed: PropTypes.func
+  getUserFeed: PropTypes.func,
 };

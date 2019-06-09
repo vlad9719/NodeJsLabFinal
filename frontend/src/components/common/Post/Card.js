@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Comment from '../Comment';
 import appConfig from '../../../config';
+import AddComment from '../Comment/New';
 
 export default function Card(props) {
   const { post } = props;
@@ -45,12 +46,14 @@ export default function Card(props) {
         </div>
       </div>
       <div className="collapse border-secondary" id={`comments${post.id}`}>
+        <AddComment postId={post.id}/>
         {post.comments.length ? post.comments.map(comment => {
-          return <Comment comment={comment} key={comment.id}/>
-        }) : <span className="font-weight-lighter ml-3">No comments for this post yet. Be the first to comment it!</span> }
+          return <Comment comment={comment} key={comment.id} postId={post.id}/>;
+        }) : <span
+          className="font-weight-lighter ml-3">No comments for this post yet. Be the first to comment it!</span>}
       </div>
     </div>
-);
+  );
 }
 
 Card.propTypes = {

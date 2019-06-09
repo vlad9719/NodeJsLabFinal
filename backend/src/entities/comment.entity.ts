@@ -1,6 +1,7 @@
-import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from './user.entity';
+import { Photo } from './photo.entity';
 
 @Entity()
 export class Comment {
@@ -31,5 +32,9 @@ export class Comment {
   @ManyToMany(type => User)
   @JoinTable()
   mentioned: User[];
+
+  @OneToOne(type => Photo)
+  @JoinTable()
+  photo: Photo;
 
 }

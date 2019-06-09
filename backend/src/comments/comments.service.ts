@@ -7,6 +7,7 @@ import { PostsService } from '../posts/posts.service';
 import { Comment } from '../entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { Photo } from '../entities/photo.entity';
 
 @Injectable()
 export class CommentsService {
@@ -14,6 +15,8 @@ export class CommentsService {
   constructor(
     @InjectRepository(Comment)
     private readonly commentsRepository: Repository<Comment>,
+    @InjectRepository(Photo)
+    private readonly photoRepository: Repository<Photo>,
     private readonly usersService: UsersService,
     private readonly postsService: PostsService,
   ) {}
@@ -51,11 +54,20 @@ export class CommentsService {
 
   async findCommentsByPostId(postId: number): Promise<Comment[]> {
     const post = await this.postsService.findPostById(postId);
-    return this.commentsRepository.find({
+
+    const comments: Comment[] = await this.commentsRepository.find({
       where: {
         post,
       },
       relations: ['user', 'mentioned'],
     });
+
+    for (const comment of comments) {
+      comment.photo = await this.photoRepository.findOne({
+        comment,
+      });
+    }
+
+    return comments;
   }
 }

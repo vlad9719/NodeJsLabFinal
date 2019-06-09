@@ -9,7 +9,9 @@ export default function Table(props) {
       <h1 className="text-center">My feed</h1>
       <AddPost/>
       {props.feed.feedPosts.map(post => {
-        return <Post post={post} key={post.id}/>
+        return (
+          <Post post={post} key={post.id}/>
+        );
       })}
     </div>
   );

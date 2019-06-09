@@ -8,6 +8,7 @@ import { HashtagsService } from '../hashtags/hashtags.service';
 import { User } from '../entities/user.entity';
 import { CommentsService } from '../comments/comments.service';
 import { Comment } from '../entities/comment.entity';
+import { Photo } from '../entities/photo.entity';
 
 @Injectable()
 export class PostsService {
@@ -17,6 +18,8 @@ export class PostsService {
     private readonly postsRepository: Repository<Post>,
     @InjectRepository(Comment)
     private readonly commentsRepository: Repository<Comment>,
+    @InjectRepository(Photo)
+    private readonly photosRepository: Repository<Photo>,
     private readonly usersService: UsersService,
     private readonly hashtagService: HashtagsService,
   ) {
@@ -70,6 +73,12 @@ export class PostsService {
         },
         relations: ['user', 'mentioned'],
       });
+
+      post.photo = await this.photosRepository.findOne({
+        where: {
+          post,
+        },
+      });
     }
 
     return posts;
@@ -77,6 +86,7 @@ export class PostsService {
 
   async getUserFeed(userId: number): Promise<object> {
     const userPosts: Post[] = await this.findPostsByUserId(userId);
+
     const following: User[] = await this.usersService.getFollowingByUserId(userId);
 
     const followingPosts: Post[] = [];

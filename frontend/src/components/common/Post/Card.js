@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Comment from '../Comment';
+import appConfig from '../../../config';
 
 export default function Card(props) {
   const { post } = props;
@@ -12,6 +13,9 @@ export default function Card(props) {
           <i className="ml-3">posted on {post.createdAt}</i>
         </div>
         <div className="ml-3 pt-2 pb-5 font-italic font-weight-lighter">{post.text}</div>
+        {post.photo ? (<div className="border text-center">
+          <img src={`${appConfig.apiUrl}/api/photos/download/post/${post.id}`} alt={'Post'} height={300}/>
+        </div>) : ''}
         <div className="border">
           {props.post.mentioned.length ? (<div className="ml-3 font-weight-light d-block">Mentioned:
             {props.post.mentioned.map(user => {

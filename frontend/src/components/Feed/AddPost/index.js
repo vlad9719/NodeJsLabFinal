@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getUserFeed } from '../../../redux/actions/feed';
-import isEmpty from '../../../utils/validation/is-empty';
 
 class AddPost extends React.Component {
   constructor(props) {
@@ -99,18 +98,15 @@ class AddPost extends React.Component {
       postData: {
         ...this.state.postData,
         mentionedIds: [...this.state.postData.mentionedIds, this.state.selectedUserId],
-      }
+      },
     });
 
     event.preventDefault();
   }
 
   onSubmit(event) {
-    let photoFormData = null;
-    if (!isEmpty(this.state.file)) {
-      photoFormData = new FormData();
-      photoFormData.append('file', this.state.file);
-    }
+    const photoFormData = new FormData();
+    photoFormData.append('file', this.state.file);
 
     this.props.addPost(this.state.postData, photoFormData, this.props.user.userInfo.id)
       .then(() => {

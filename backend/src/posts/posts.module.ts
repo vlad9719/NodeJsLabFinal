@@ -10,9 +10,10 @@ import { HashtagsModule } from '../hashtags/hashtags.module';
 import { CommentsModule } from '../comments/comments.module';
 import { CommentsService } from '../comments/comments.service';
 import { Comment } from '../entities/comment.entity';
+import { Photo } from '../entities/photo.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, Comment]), UsersModule, HashtagsModule],
+  imports: [TypeOrmModule.forFeature([Post, Comment, Photo]), UsersModule, HashtagsModule],
   controllers: [PostsController],
   providers: [PostsService, UsersService, HashtagsService],
 })

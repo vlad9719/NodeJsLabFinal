@@ -37,4 +37,7 @@ export class Post {
   @ManyToMany(type => Hashtag)
   @JoinTable()
   hashtags: Hashtag[];
+
+  @OneToOne(type => Photo)
+  photo: Photo;
 }

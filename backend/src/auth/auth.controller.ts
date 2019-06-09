@@ -1,8 +1,10 @@
-import { Controller, Get, UseGuards, Res, Req, UnauthorizedException, Post, Body } from '@nestjs/common';
+import { Controller, Get, UseGuards, Res, Req, UnauthorizedException, Post, Body, Headers } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthorizeUserDto } from '../users/validation/dto/authorize.user.dto';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
+import { Request } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('api/auth')
 export class AuthController {
@@ -22,13 +24,10 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   googleLoginCallback(@Req() req, @Res() res) {
     // handles the Google OAuth2 callback
-    const jwt: string = req.jwt;
-    const user: object = req.user;
+    const jwt: string = req.user.accessToken;
+    const user: object = req.user.user;
     if (user) {
-      res.json({
-        accessToken: jwt,
-        ...user,
-      });
+      res.redirect('http://localhost:3000/authorized-with-google/' + jwt);
     } else {
       throw new UnauthorizedException();
     }
@@ -43,6 +42,14 @@ export class AuthController {
 
     const token = await this.authService.signPayload(payload);
     return { user, token };
+  }
+
+  @Post('/me')
+  @UseGuards(AuthGuard('jwt'))
+  async me(@Req() request: Request) {
+    const authHeader = request.headers.authorization;
+    const jwt = authHeader.slice(7);
+    return await this.authService.getUserByJwt(jwt);
   }
 
 }

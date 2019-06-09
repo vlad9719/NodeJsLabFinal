@@ -18,11 +18,6 @@ export class PhotosService {
 
   async addPhotoForPost(url: string, postId: number): Promise<Photo> {
     const post = await this.postsService.findPostById(postId);
-    const photo = await this.findPhotoByPostId(postId);
-
-    if (photo) {
-      throw new BadRequestException(`Post with id '${postId}' already has a photo`);
-    }
 
     return await this.photoRepository.save({
       url,
@@ -33,11 +28,6 @@ export class PhotosService {
   async addPhotoForComment(url: string, commentId: number): Promise<Photo> {
     const comment = await this.commentsService.findCommentById(commentId);
 
-    const photo = await this.findPhotoByCommentId(commentId);
-
-    if (photo) {
-      throw new BadRequestException(`Comment with id '${commentId}' already has a photo`);
-    }
 
     return await this.photoRepository.save({
       url,

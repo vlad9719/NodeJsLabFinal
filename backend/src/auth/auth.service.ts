@@ -15,6 +15,7 @@ export class AuthService {
   private readonly JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
   constructor(private readonly usersService: UsersService,
+              private readonly jwtService: JwtService,
               ) {
   }
 
@@ -28,6 +29,7 @@ export class AuthService {
       }
 
       const payload = {
+        id: user.id,
         thirdPartyId: profile.id,
         provider,
       };
@@ -49,6 +51,11 @@ export class AuthService {
 
   async validateUser(payload: any): Promise<object> {
     return this.usersService.findByPayload(payload);
+  }
+
+  async getUserByJwt(jwt: string) {
+    const payload: any = this.jwtService.decode(jwt);
+    return await this.usersService.findUserById(payload.id);
   }
 
 }

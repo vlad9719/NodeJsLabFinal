@@ -23,7 +23,12 @@ export class UsersService {
     });
 
     if (user) {
-      throw new BadRequestException('Login has already been taken');
+      throw new BadRequestException([{
+        property: 'login',
+        constraints: {
+          isUnique: 'Such login has already been taken',
+        },
+      }]);
     }
 
     user = await this.usersRepository.findOne({
@@ -31,7 +36,12 @@ export class UsersService {
     });
 
     if (user) {
-      throw new BadRequestException('User with such email has already been registered');
+      throw new BadRequestException([{
+        property: 'email',
+        constraints: {
+          isUnique: 'User with such email has already been registered',
+        },
+      }]);
     }
 
     return await this.usersRepository.save({
@@ -230,5 +240,9 @@ export class UsersService {
 
         throw new Error(reason);
       });
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await this.usersRepository.find();
   }
 }

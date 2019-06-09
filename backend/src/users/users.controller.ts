@@ -57,4 +57,14 @@ export class UsersController {
   async removeFollowingByUserId(@Param() params: FollowerParams) {
     return await this.usersService.removeFollower(params.followerId, params.followingId);
   }
+
+  @Get('/all')
+  async getAllUsers() {
+    return await this.usersService.getAllUsers()
+      .then(users => {
+        return {
+          users,
+        };
+      });
+  }
 }

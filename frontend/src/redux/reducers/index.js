@@ -4,6 +4,7 @@ import userReducer from './user';
 import errorReducer from './error';
 import feedReducer from './feed';
 import postsReducer from './posts';
+import searchReducer from './search';
 
 export default combineReducers({
   common: commonReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   feed: feedReducer,
   errors: errorReducer,
   posts: postsReducer,
+  search: searchReducer,
 });

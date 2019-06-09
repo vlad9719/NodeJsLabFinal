@@ -1,10 +1,10 @@
 import React from 'react';
-import { getUserFeed } from '../../redux/actions/feed';
 import { me } from '../../redux/actions/user';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Table from './Table';
+import { getUserFeed } from '../../redux/actions/feed';
 
 class Feed extends React.Component {
   componentDidMount() {

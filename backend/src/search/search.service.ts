@@ -5,6 +5,8 @@ import { createQueryBuilder, Repository } from 'typeorm';
 import { Comment } from '../entities/comment.entity';
 import { Hashtag } from '../entities/hashtag.entity';
 import * as _ from 'lodash';
+import { User } from '../entities/user.entity';
+import { Photo } from '../entities/photo.entity';
 
 @Injectable()
 export class SearchService {
@@ -15,6 +17,10 @@ export class SearchService {
     private readonly commentsRepository: Repository<Comment>,
     @InjectRepository(Hashtag)
     private readonly hashtagsRepository: Repository<Hashtag>,
+    @InjectRepository(Photo)
+    private readonly photosRepository: Repository<Photo>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
   ) {
   }
 
@@ -31,13 +37,38 @@ export class SearchService {
   }
 
   async searchByPostsText(query: string): Promise<Post[]> {
-    const posts: Post [] = await this.postsRepository
-      .createQueryBuilder()
+    const posts: Post[] = await this.postsRepository
+      .createQueryBuilder('post')
       .select()
       .where(`MATCH (text) AGAINST ('${query}')`)
       .getMany();
 
-    return posts;
+    const joinedPosts: Post[] = [];
+    for (let post of posts) {
+      post = await this.postsRepository.findOne({
+        where: {
+          id: post.id,
+        },
+        relations: ['mentioned', 'user', 'hashtags'],
+      });
+
+      post.photo = await this.photosRepository.findOne({
+        where: {
+          post,
+        },
+      });
+
+      post.comments = await this.commentsRepository.find({
+        where: {
+          post,
+        },
+        relations: ['user', 'mentioned'],
+      });
+
+      joinedPosts.push(post);
+    }
+
+    return joinedPosts;
   }
 
   async searchByCommentsText(query: string): Promise<Comment[]> {
@@ -47,7 +78,26 @@ export class SearchService {
       .where(`MATCH (text) AGAINST ('${query}')`)
       .getMany();
 
-    return comments;
+    const joinedComments: Comment[] = [];
+
+    for (let comment of comments) {
+      comment = await this.commentsRepository.findOne({
+        where: {
+          id: comment.id,
+        },
+        relations: ['mentioned', 'user'],
+      });
+
+      comment.photo = await this.photosRepository.findOne({
+        where: {
+          comment,
+        },
+      });
+
+      joinedComments.push(comment);
+    }
+
+    return joinedComments;
   }
 
   async searchByHashtagsText(query: string): Promise<object> {
@@ -58,6 +108,7 @@ export class SearchService {
       .getMany();
 
     const postsWithHashtags: Post [] = [];
+    const joinedPostsWithHashtags: Post[] = [];
 
     for (const hashtag of hashtags) {
       const postsWithHashtag: Post[] = await this.postsRepository.find({
@@ -69,12 +120,48 @@ export class SearchService {
           });
         });
 
-      postsWithHashtags.push(...postsWithHashtag);
-    }
+      for (let post of postsWithHashtag) {
+        post = await this.postsRepository.findOne({
+          where: {
+            id: post.id,
+          },
+          relations: ['mentioned', 'user', 'comments', 'hashtags'],
+        });
 
-    return {
-      hashtags,
-      postsWithHashtags,
-    };
+        const joinedComments: Comment[] = [];
+        for (let comment of post.comments) {
+          comment = await this.commentsRepository.findOne({
+            where: {
+              id: comment.id,
+            },
+            relations: ['mentioned', 'user'],
+          });
+
+          comment.photo = await this.photosRepository.findOne({
+            where: {
+              comment,
+            },
+          });
+
+          joinedComments.push(comment);
+          console.log(JSON.stringify(comment, null, 2));
+        }
+
+        post.comments = joinedComments;
+
+        post.photo = await this.photosRepository.findOne({
+          where: {
+            post,
+          },
+        });
+
+        joinedPostsWithHashtags.push(post);
+      }
+
+      return {
+        hashtags,
+        postsWithHashtags: joinedPostsWithHashtags,
+      };
+    }
   }
 }

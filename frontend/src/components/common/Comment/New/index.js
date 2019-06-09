@@ -1,6 +1,5 @@
 import React from 'react';
 import Form from './Form';
-import { getUserFeed } from '../../../../redux/actions/feed';
 import { getAllUsers } from '../../../../redux/actions/user';
 import { getViewedUserPosts } from '../../../../redux/actions/post';
 import { addComment } from '../../../../redux/actions/comment';
@@ -30,14 +29,10 @@ class AddComment extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.props.user.allUsers.length) {
       this.props.getAllUsers()
         .then(() => {
-          this.setDefaultMentionedUser();
+          this.setDefaultMentionedUser()
         });
-    }
-
-    this.setDefaultMentionedUser();
   }
 
   setDefaultMentionedUser() {
@@ -95,10 +90,7 @@ class AddComment extends React.Component {
     const photoFormData = new FormData();
     photoFormData.append('file', this.state.file);
 
-    this.props.addComment(this.state.commentData, photoFormData, this.props.user.userInfo.id, this.props.postId)
-      .then(() => {
-        this.props.getUserFeed(this.props.user.userInfo.id);
-      });
+    this.props.addComment(this.state.commentData, photoFormData, this.props.user.userInfo.id, this.props.postId);
     this.setState({
       mentionedUsers: [],
       selectedUser: {},
@@ -136,7 +128,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getUserFeed,
   getAllUsers,
   addComment,
   getViewedUserPosts,
@@ -148,5 +139,5 @@ export default connect(
 )(withRouter(AddComment));
 
 AddComment.propTypes = {
-  getUserFeed: PropTypes.func,
+  addComment: PropTypes.func,
 };

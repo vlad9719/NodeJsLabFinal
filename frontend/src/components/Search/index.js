@@ -3,40 +3,35 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { search } from '../../redux/actions/search';
+import Results from './Results';
+import isEmpty from '../../utils/validation/is-empty';
 
 class Search extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
-      isLoading: false
-    });
-  }
 
   render() {
-    return (
-    <div>Search component</div>
+    if (!isEmpty(this.props.searchResults.items)) {
+      return (
+        <div>
+          <Results results={this.props.searchResults.items}/>
+        </div>
       );
     }
+
+    return null;
+  }
 }
 
 const mapStateToProps = state => ({
-  products: state.products,
-  user: state.user
+  searchResults: state.search,
 });
 
 const mapDispatchToProps = {
-  search
+  search,
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withRouter(Search));
 
 Search.propTypes = {
@@ -44,5 +39,5 @@ Search.propTypes = {
   search: PropTypes.func,
   match: PropTypes.object,
   user: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
 };

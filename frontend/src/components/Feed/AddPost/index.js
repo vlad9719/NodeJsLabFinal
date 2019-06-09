@@ -5,7 +5,6 @@ import { addPost } from '../../../redux/actions/post';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { getUserFeed } from '../../../redux/actions/feed';
 
 class AddPost extends React.Component {
   constructor(props) {
@@ -108,10 +107,7 @@ class AddPost extends React.Component {
     const photoFormData = new FormData();
     photoFormData.append('file', this.state.file);
 
-    this.props.addPost(this.state.postData, photoFormData, this.props.user.userInfo.id)
-      .then(() => {
-        this.props.getUserFeed(this.props.user.userInfo.id);
-      });
+    this.props.addPost(this.state.postData, photoFormData, this.props.user.userInfo.id);
     this.setState({
       mentionedUsers: [],
       selectedUser: {},
@@ -154,7 +150,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   getAllUsers,
   addPost,
-  getUserFeed,
 };
 
 export default connect(

@@ -7,6 +7,10 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 class Post extends React.Component {
+  componentDidMount() {
+    this.props.getUserFeed();
+  }
+
   render(props) {
     return (
       <div>

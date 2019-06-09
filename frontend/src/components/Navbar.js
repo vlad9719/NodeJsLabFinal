@@ -55,6 +55,7 @@ class Navbar extends Component {
             </Link>
           </div>
         </li>
+        <Link to="/users-list" className="nav-link active">All Users</Link>
         <Link to="/" className="nav-link active" onClick={this.onLogout}>
           Logout
         </Link>

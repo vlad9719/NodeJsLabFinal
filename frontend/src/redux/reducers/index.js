@@ -3,10 +3,12 @@ import commonReducer from './common';
 import userReducer from './user';
 import errorReducer from './error';
 import feedReducer from './feed';
+import postsReducer from './posts';
 
 export default combineReducers({
   common: commonReducer,
   user: userReducer,
   feed: feedReducer,
   errors: errorReducer,
+  posts: postsReducer,
 });

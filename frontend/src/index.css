@@ -20,6 +20,10 @@ footer {
   width: 100%;
 }
 
+.font-large {
+  font-size: 25px;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }

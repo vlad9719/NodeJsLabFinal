@@ -2,6 +2,7 @@ import React from 'react';
 import Form from './Form';
 import { getUserFeed } from '../../../../redux/actions/feed';
 import { getAllUsers } from '../../../../redux/actions/user';
+import { getViewedUserPosts } from '../../../../redux/actions/post';
 import { addComment } from '../../../../redux/actions/comment';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -27,7 +28,6 @@ class AddComment extends React.Component {
     this.onPhotoChange = this.onPhotoChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
-
 
   componentDidMount() {
     if (!this.props.user.allUsers.length) {
@@ -139,6 +139,7 @@ const mapDispatchToProps = {
   getUserFeed,
   getAllUsers,
   addComment,
+  getViewedUserPosts,
 };
 
 export default connect(

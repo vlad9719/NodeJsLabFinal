@@ -1,5 +1,5 @@
 import request from 'utils/request';
-import { ERROR, SET_ALL_USERS, SET_CURRENT_USER } from './types';
+import { ERROR, SET_ALL_USERS, SET_CURRENT_USER, SET_VIEWED_USER } from './types';
 import { setToken, unsetToken } from '../../utils/request';
 
 export const login = (history, userData) => {
@@ -83,6 +83,22 @@ export const getAllUsers = () => {
   }
 };
 
+export const getViewedUser = id => {
+  return dispatch => {
+    return request('GET', `api/users/${id}`)
+      .then(response => {
+        const user = response.user;
+        dispatch(setViewedUser(user));
+      })
+      .catch(err => {
+        dispatch({
+          type: ERROR,
+          payload: err
+        });
+      });
+  }
+}
+
 export const setCurrentUser = decodedUser => {
   return {
     type: SET_CURRENT_USER,
@@ -94,6 +110,13 @@ export const setAllUsers = users => {
   return {
     type: SET_ALL_USERS,
     payload: users,
+  }
+};
+
+export const setViewedUser = user => {
+  return {
+    type: SET_VIEWED_USER,
+    payload: user,
   }
 };
 

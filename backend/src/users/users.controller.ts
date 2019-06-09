@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { FollowerParams } from './validation/params/follower.params';
 import { GetFollowersParams } from './validation/params/get.followers.params';
 import { GetFollowingParams } from './validation/params/get.following.params';
+import { UserParams } from './validation/params/user.params';
 
 @Controller('/api/users')
 export class UsersController {
@@ -64,6 +65,16 @@ export class UsersController {
       .then(users => {
         return {
           users,
+        };
+      });
+  }
+
+  @Get('/:userId')
+  async getUserById(@Param() params: UserParams) {
+    return await this.usersService.getUserById(params.userId)
+      .then(user => {
+        return {
+          user,
         };
       });
   }

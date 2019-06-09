@@ -11,6 +11,8 @@ import Search from 'components/Search';
 import AuthorizedWithGoogle from 'components/AuthorizedWithGoogle';
 import { Redirect } from 'react-router-dom';
 import Feed from 'components/Feed';
+import UsersList from 'components/Users/All';
+import Profile from 'components/Users/Profile';
 
 import Home from 'components/Home';
 import Layout from 'components/Layout';
@@ -52,6 +54,18 @@ class App extends Component {
               path="/feed"
               component={Feed}
             />
+            <PrivateRoute
+              isPermissions={isAuthenticated}
+              exact
+              path="/users-list"
+              component={UsersList}
+            />
+            <PrivateRoute
+              isPermissions={isAuthenticated}
+              exact
+              path="/users/:id"
+              component={Profile}
+            />
           </Layout>
         </Router>
       </Provider>
@@ -66,7 +80,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  me
+  me,
 };
 
 export default connect(

@@ -13,6 +13,8 @@ import { Redirect } from 'react-router-dom';
 import Feed from 'components/Feed';
 import UsersList from 'components/Users/All';
 import Profile from 'components/Users/Profile';
+import FollowersList from 'components/Users/Followers';
+import FollowingList from 'components/Users/Following';
 
 import Home from 'components/Home';
 import Layout from 'components/Layout';
@@ -65,6 +67,18 @@ class App extends Component {
               exact
               path="/users/:id"
               component={Profile}
+            />
+            <PrivateRoute
+              isPermissions={isAuthenticated}
+              exact
+              path="/followers"
+              component={FollowersList}
+            />
+            <PrivateRoute
+              isPermissions={isAuthenticated}
+              exact
+              path="/following"
+              component={FollowingList}
             />
           </Layout>
         </Router>

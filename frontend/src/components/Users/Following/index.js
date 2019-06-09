@@ -1,17 +1,17 @@
 import React from 'react';
-import { getAllUsers } from '../../../redux/actions/user';
+import { getFollowing } from '../../../redux/actions/user';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import List from '../../common/Users/List';
 
-class UsersList extends React.Component {
+class FollowingList extends React.Component {
   componentDidMount() {
-    this.props.getAllUsers();
+    this.props.getFollowing(this.props.user.userInfo.id);
   }
 
   render() {
-    return <List users={this.props.user.allUsers} heading="All users"/>
+    return <List users={this.props.user.following} heading="Following"/>
   }
 }
 
@@ -20,14 +20,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getAllUsers,
+  getFollowing,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(UsersList));
+)(withRouter(FollowingList));
 
-UsersList.propTypes = {
+FollowingList.propTypes = {
   getUserFeed: PropTypes.func
 };

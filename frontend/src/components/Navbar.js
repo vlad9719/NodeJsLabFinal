@@ -47,11 +47,11 @@ class Navbar extends Component {
             <Link className="dropdown-item" to="/feed">
               Feed
             </Link>
-            <Link to="/orders" className="dropdown-item">
-              N following
+            <Link to="/following" className="dropdown-item">
+              Following
             </Link>
-            <Link to="/orders" className="dropdown-item">
-              N followers
+            <Link to="/followers" className="dropdown-item">
+              Followers
             </Link>
           </div>
         </li>

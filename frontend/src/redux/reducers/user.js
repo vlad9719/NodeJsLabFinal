@@ -1,5 +1,5 @@
 import {
-  SET_CURRENT_USER, SET_ALL_USERS, SET_VIEWED_USER
+  SET_CURRENT_USER, SET_ALL_USERS, SET_VIEWED_USER, SET_FOLLOWERS, SET_FOLLOWING
 } from '../../redux/actions/types';
 import isEmpty from '../../utils/validation/is-empty';
 import Cookies from 'js-cookie';
@@ -9,6 +9,8 @@ const initialState = {
   userInfo: [],
   allUsers: [],
   viewedUser: {},
+  followers: [],
+  following: [],
 };
 
 export default function(state = initialState, action) {
@@ -28,6 +30,16 @@ export default function(state = initialState, action) {
       return {
         ...state,
         viewedUser: action.payload,
+      };
+    case SET_FOLLOWERS:
+      return {
+        ...state,
+        followers: action.payload,
+      };
+    case SET_FOLLOWING:
+      return {
+        ...state,
+        following: action.payload,
       };
     default:
       return state;

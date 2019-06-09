@@ -1,5 +1,5 @@
 import request from 'utils/request';
-import { ERROR, SET_ALL_USERS, SET_CURRENT_USER, SET_VIEWED_USER } from './types';
+import { ERROR, SET_ALL_USERS, SET_CURRENT_USER, SET_FOLLOWERS, SET_FOLLOWING, SET_VIEWED_USER } from './types';
 import { setToken, unsetToken } from '../../utils/request';
 
 export const login = (history, userData) => {
@@ -97,7 +97,63 @@ export const getViewedUser = id => {
         });
       });
   }
-}
+};
+
+export const getFollowers = userId => {
+  return dispatch => {
+    return request('GET', `api/users/followers/${userId}`)
+      .then(response => {
+        const followers = response.followers;
+        dispatch(setFollowers(followers));
+      })
+      .catch(err => {
+        dispatch({
+          type: ERROR,
+          payload: err
+        });
+      });
+  };
+};
+
+export const getFollowing = userId => {
+  return dispatch => {
+    return request('GET', `api/users/following/${userId}`)
+      .then(response => {
+        const following = response.following;
+        dispatch(setFollowing(following));
+      })
+      .catch(err => {
+        dispatch({
+          type: ERROR,
+          payload: err
+        });
+      });
+  };
+};
+
+export const follow = (followerId, followingId) => {
+  return dispatch => {
+    return request('POST', `api/users/follower/${followerId}/${followingId}`)
+      .catch(err => {
+        dispatch({
+          type: ERROR,
+          payload: err,
+        });
+      });
+  };
+};
+
+export const unfollow = (followerId, followingId) => {
+  return dispatch => {
+    return request('DELETE', `api/users/following/${followerId}/${followingId}`)
+      .catch(err => {
+        dispatch({
+          type: ERROR,
+          payload: err,
+        });
+      });
+  };
+};
 
 export const setCurrentUser = decodedUser => {
   return {
@@ -111,6 +167,20 @@ export const setAllUsers = users => {
     type: SET_ALL_USERS,
     payload: users,
   }
+};
+
+export const setFollowers = followers => {
+  return {
+    type: SET_FOLLOWERS,
+    payload: followers,
+  };
+};
+
+export const setFollowing = following => {
+  return {
+    type: SET_FOLLOWING,
+    payload: following,
+  };
 };
 
 export const setViewedUser = user => {

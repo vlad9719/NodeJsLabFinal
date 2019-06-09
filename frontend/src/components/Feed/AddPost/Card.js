@@ -21,7 +21,7 @@ export default function Card(props) {
           <div className="d-block"> You've mentioned {mentionedUsers.length} user(s)</div>
           <div className="d-block"> {mentionedUsers.length ? mentionedUsers.map(user => {
             return (
-              <div className="border border-secondary bg-light d-inline m-2" key={user}> @{user} </div>
+              <div className="border border-secondary bg-light d-inline m-2" key={user}>@{user} </div>
             );
           }) : ''}
           </div>

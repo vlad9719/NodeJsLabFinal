@@ -6,9 +6,9 @@ import { UsersService } from '../users/users.service';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { HashtagsService } from '../hashtags/hashtags.service';
 import { User } from '../entities/user.entity';
-import { CommentsService } from '../comments/comments.service';
 import { Comment } from '../entities/comment.entity';
 import { Photo } from '../entities/photo.entity';
+import nodemailer= require('nodemailer');
 
 @Injectable()
 export class PostsService {
@@ -31,6 +31,31 @@ export class PostsService {
 
     let mentioned: User[] = [];
     if (mentionedIds) {
+      for (const id of mentionedIds) {
+        const mentionedUser = await this.usersService.findUserById(id);
+        if (mentionedUser.email) {
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.GOOGLE_EMAIL,
+              pass: process.env.GOOGLE_PASSWORD,
+            },
+          });
+
+          const mailOptions = {
+            from: 'twittar@email.com',
+            to: mentionedUser.email,
+            subject: 'You were just mentioned',
+            html: `<p>You were mentioned by ${user.login} in post:</p><p>${text}</p>`
+          };
+
+          transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+              throw err;
+            }
+          });
+        }
+      }
       mentioned = await this.usersService.findUsersByIds(mentionedIds);
     }
 

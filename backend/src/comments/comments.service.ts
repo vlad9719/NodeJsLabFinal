@@ -8,6 +8,7 @@ import { Comment } from '../entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { Photo } from '../entities/photo.entity';
+import nodemailer= require('nodemailer');
 
 @Injectable()
 export class CommentsService {
@@ -30,6 +31,32 @@ export class CommentsService {
     let mentioned: User[] = [];
     if (mentionedIds) {
       mentioned = await this.usersService.findUsersByIds(mentionedIds);
+
+      for (const id of mentionedIds) {
+        const mentionedUser = await this.usersService.findUserById(id);
+        if (mentionedUser.email) {
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.GOOGLE_EMAIL,
+              pass: process.env.GOOGLE_PASSWORD,
+            },
+          });
+
+          const mailOptions = {
+            from: 'twittar@email.com',
+            to: mentionedUser.email,
+            subject: 'You were just mentioned',
+            html: `<p>You were mentioned by ${user.login} in comment:</p><p>${text}</p>`
+          };
+
+          transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+              throw err;
+            }
+          });
+        }
+      }
     }
 
     return await this.commentsRepository.save({

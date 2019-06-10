@@ -8,7 +8,7 @@ import { HashtagsService } from '../hashtags/hashtags.service';
 import { User } from '../entities/user.entity';
 import { Comment } from '../entities/comment.entity';
 import { Photo } from '../entities/photo.entity';
-import nodemailer= require('nodemailer');
+import nodemailer = require('nodemailer');
 
 @Injectable()
 export class PostsService {
@@ -46,7 +46,7 @@ export class PostsService {
             from: 'twittar@email.com',
             to: mentionedUser.email,
             subject: 'You were just mentioned',
-            html: `<p>You were mentioned by ${user.login} in post:</p><p>${text}</p>`
+            html: `<p>You were mentioned by ${user.login} in post:</p><p>${text}</p>`,
           };
 
           transporter.sendMail(mailOptions, (err, info) => {

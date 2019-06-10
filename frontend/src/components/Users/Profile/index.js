@@ -1,5 +1,5 @@
 import React from 'react';
-import { getViewedUser, getAllUsers, getFollowing, getFollowers, me, follow, unfollow } from '../../../redux/actions/user';
+import { getViewedUser, getFollowing, getFollowers, me, follow, unfollow } from '../../../redux/actions/user';
 import { getViewedUserPosts } from '../../../redux/actions/post';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -13,13 +13,13 @@ class Profile extends React.Component {
     this.onFollowButtonClick = this.onFollowButtonClick.bind(this);
     this.onUnfollowButtonClick = this.onUnfollowButtonClick.bind(this);
   }
+
   componentDidMount() {
     const userId = this.props.match.params.id;
     this.props.me()
       .then(() => {
         this.props.getViewedUser(userId);
         this.props.getViewedUserPosts(userId);
-        this.props.getAllUsers();
         this.props.getFollowers(this.props.user.userInfo.id);
         this.props.getFollowing(this.props.user.userInfo.id);
       });
@@ -61,7 +61,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   getViewedUser,
   getViewedUserPosts,
-  getAllUsers,
   getFollowers,
   getFollowing,
   me,

@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from './Card';
-import { getAllUsers } from '../../../redux/actions/user';
+import { getUserFeed } from '../../../redux/actions/feed';
 import { addPost } from '../../../redux/actions/post';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -31,15 +31,12 @@ class AddPost extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getAllUsers()
-      .then(() => {
-        const firstUser = this.props.user.allUsers[0];
-        this.setState({
-          ...this.state,
-          selectedUser: firstUser.login,
-          selectedUserId: firstUser.id,
-        });
-      });
+    const firstUser = this.props.user.allUsers[0];
+    this.setState({
+      ...this.state,
+      selectedUser: firstUser.login,
+      selectedUserId: firstUser.id,
+    });
   }
 
   onMentionedUserSelect(event) {
@@ -107,7 +104,10 @@ class AddPost extends React.Component {
     const photoFormData = new FormData();
     photoFormData.append('file', this.state.file);
 
-    this.props.addPost(this.state.postData, photoFormData, this.props.user.userInfo.id);
+    this.props.addPost(this.state.postData, photoFormData, this.props.user.userInfo.id)
+      .then(() => {
+        this.props.getUserFeed(this.props.user.userInfo.id);
+      });
     this.setState({
       mentionedUsers: [],
       selectedUser: {},
@@ -120,6 +120,7 @@ class AddPost extends React.Component {
       },
       file: {},
     });
+
     event.preventDefault();
   }
 
@@ -148,8 +149,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getAllUsers,
   addPost,
+  getUserFeed,
 };
 
 export default connect(

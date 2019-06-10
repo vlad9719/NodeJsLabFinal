@@ -1,8 +1,9 @@
 import React from 'react';
 import Form from './Form';
+import { addComment } from '../../../../redux/actions/comment';
+import { getUserFeed } from '../../../../redux/actions/feed';
 import { getAllUsers } from '../../../../redux/actions/user';
 import { getViewedUserPosts } from '../../../../redux/actions/post';
-import { addComment } from '../../../../redux/actions/comment';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -29,10 +30,7 @@ class AddComment extends React.Component {
   }
 
   componentDidMount() {
-      this.props.getAllUsers()
-        .then(() => {
-          this.setDefaultMentionedUser()
-        });
+    this.setDefaultMentionedUser();
   }
 
   setDefaultMentionedUser() {
@@ -90,7 +88,15 @@ class AddComment extends React.Component {
     const photoFormData = new FormData();
     photoFormData.append('file', this.state.file);
 
-    this.props.addComment(this.state.commentData, photoFormData, this.props.user.userInfo.id, this.props.postId);
+    this.props.addComment(this.state.commentData, photoFormData, this.props.user.userInfo.id, this.props.postId)
+      .then(() => {
+        this.props.getUserFeed(this.props.user.userInfo.id)
+          .then(() => {
+            if (this.props.user.viewedUser.id) {
+              this.props.getViewedUserPosts(this.props.user.viewedUser.id);
+            }
+          });
+      });
     this.setState({
       mentionedUsers: [],
       selectedUser: {},
@@ -105,7 +111,6 @@ class AddComment extends React.Component {
     });
     event.preventDefault();
   }
-
 
   render() {
     return <Form
@@ -125,11 +130,13 @@ class AddComment extends React.Component {
 const mapStateToProps = state => ({
   feed: state.feed,
   user: state.user,
+  posts: state.posts,
 });
 
 const mapDispatchToProps = {
-  getAllUsers,
   addComment,
+  getUserFeed,
+  getAllUsers,
   getViewedUserPosts,
 };
 

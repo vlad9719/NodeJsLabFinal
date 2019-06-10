@@ -144,7 +144,6 @@ export class SearchService {
           });
 
           joinedComments.push(comment);
-          console.log(JSON.stringify(comment, null, 2));
         }
 
         post.comments = joinedComments;

@@ -5,8 +5,6 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './validation/dto/create.user.dto';
 import { generate } from 'password-hash';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import * as _ from 'lodash';
-import { cloneDeep } from '@babel/types';
 
 @Injectable()
 export class UsersService {

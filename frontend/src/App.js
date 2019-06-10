@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from 'redux/store';
 import { connect } from 'react-redux';
-import { me } from 'redux/actions/user';
+import { me, getAllUsers } from 'redux/actions/user';
 import PropTypes from 'prop-types';
 import Search from 'components/Search';
 import AuthorizedWithGoogle from 'components/AuthorizedWithGoogle';
@@ -35,7 +35,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 class App extends Component {
   constructor(props) {
     super(props);
-    this.props.me();
+    this.props.me()
+      .then(() => {
+        this.props.getAllUsers();
+      });
   }
 
   render() {
@@ -95,6 +98,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   me,
+  getAllUsers,
 };
 
 export default connect(

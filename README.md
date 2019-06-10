@@ -1,4 +1,4 @@
-###Description
+## Description
 
 This is a clone of a real-life [Twitter](https://twitter.com/). It is built with MySQL database,
 NestJS and ReactJS frameworks.

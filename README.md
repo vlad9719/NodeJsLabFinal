@@ -5,13 +5,7 @@ NestJS and ReactJS frameworks.
 
 ## Prerequisites
 
-Before you start, you must have installed the following tools:
-
-1. [Node.JS](https://nodejs.org/en/)
-
-2. [NPM](https://www.npmjs.com/get-npm)
-
-3. [Yarn](https://yarnpkg.com/en/)
+You must have [Docker](https://www.docker.com/) installed on your machine.
 
 ## Installation
 
@@ -39,48 +33,25 @@ node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 ```
 And assign it to the corresponding variable.
 
-Step 4. Create a new schema ```twittar``` with MySQL Workbench.
-
-Step 5. Install dependencies in ```backend``` folder:
-```$xslt
-npm install
-```
-
-Step 6. Install dependencies in ```frontend``` folder:
-```$xslt
-cd ..
-cd frontend
-yarn
-```
-
-Step 6. Create a new schema ```twittar``` with MySQL Workbench.
-
 ## Running the application
 
-Step 0. Get back to root project directory:
+Step 4. Build docker images
+
 ```$xslt
 cd ..
-//you must now be in the NodeJsLabFinal root directory
+docker-compose build
 ```
-Step 1. Start backend server (run console command in ```backend```) folder:
 
+Step 5. Run the application
 ```$xslt
-cd backend
-npm start
+docker-compose up
 ```
 
-Step 2. Start frontend server (open new terminal window in the ```frontend``` folder and run the command):
-```$xslt
-yarn start
-```
-
-Step 3. After a minute or so, both servers must have been started.
-You must see corresponding messages in both consoles.
-After you see those messages, if address ```localhost:3000```
-has not been opened automatically in your browser, copy and paste this path into your
-address bar:
+Step 6. After a couple of minutes, both servers must have been started.
+After all services are started (Database, Backend server and Frontend server),
+, copy and paste this path into your browser address bar:
 ````$xslt
 http://localhost:3000
 ````
 
-Step 4. Navigate and explore the application in your browser. Enjoy yourself :)
+Step 7. Navigate and explore the application in your browser. Enjoy yourself :)

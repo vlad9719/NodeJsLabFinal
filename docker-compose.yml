@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  db:
+    build: ./backend/docker-db
+    environment:
+      DATABASE_HOST: localhost
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: twittar
+    ports:
+      - 3306:3306
+  backend:
+    build: ./backend
+    network_mode: host
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    restart: on-failure
+  frontend:
+    build: ./frontend
+    network_mode: host
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    restart: on-failure
